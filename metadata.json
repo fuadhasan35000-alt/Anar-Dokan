@@ -1,0 +1,6 @@
+{
+  "name": "আমার দোকান",
+  "description": "Bengali-first offline-first POS, inventory, customer ledger, due tracking, multi-business, multi-branch shop management system.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

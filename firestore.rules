@@ -1,0 +1,105 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Helper function to get current user document
+    function getUserData(businessId) {
+      return get(/databases/$(database)/documents/businesses/$(businessId)/users/$(request.auth.uid)).data;
+    }
+
+    // Helper function to check if user is approved
+    function isApproved(businessId) {
+      return isAuthenticated() && getUserData(businessId).status == 'APPROVED';
+    }
+
+    // Helper function to check if user belongs to business
+    function belongsToBusiness(businessId) {
+      return isAuthenticated() && getUserData(businessId).businessId == businessId && isApproved(businessId);
+    }
+
+    // Helper function to check role
+    function isSuperAdmin(businessId) {
+      return isApproved(businessId) && getUserData(businessId).role == 'SUPER_ADMIN';
+    }
+
+    function isAdmin(businessId) {
+      return isApproved(businessId) && (getUserData(businessId).role == 'ADMIN' || getUserData(businessId).role == 'SUPER_ADMIN');
+    }
+
+    function hasBranchAccess(businessId, branchId) {
+      return isAdmin(businessId) || (isApproved(businessId) && getUserData(businessId).branchId == branchId);
+    }
+
+    // Business collection
+    match /businesses/{businessId} {
+      allow read: if isAuthenticated() && (belongsToBusiness(businessId) || request.auth.token.email != null);
+      allow create: if isAuthenticated();
+      allow update, delete: if isSuperAdmin(businessId);
+
+      // Branches subcollection
+      match /branches/{branchId} {
+        allow read: if belongsToBusiness(businessId);
+        allow write: if isAdmin(businessId);
+      }
+
+      // Users subcollection
+      match /users/{userId} {
+        allow read: if belongsToBusiness(businessId);
+        allow create: if isAuthenticated();
+        allow update, delete: if isAdmin(businessId) || (request.auth.uid == userId);
+      }
+
+      // Products subcollection
+      match /products/{productId} {
+        allow read: if belongsToBusiness(businessId);
+        allow write: if belongsToBusiness(businessId) && (isAdmin(businessId) || getUserData(businessId).permissionsCsv.matches('.*ADD_PRODUCT.*') || getUserData(businessId).permissionsCsv.matches('.*EDIT_STOCK.*'));
+      }
+
+      // Customers subcollection
+      match /customers/{customerId} {
+        allow read: if belongsToBusiness(businessId);
+        allow write: if belongsToBusiness(businessId);
+      }
+
+      // Sales subcollection
+      match /sales/{saleId} {
+        allow read: if belongsToBusiness(businessId);
+        allow write: if belongsToBusiness(businessId);
+
+        match /items/{itemId} {
+          allow read, write: if belongsToBusiness(businessId);
+        }
+      }
+
+      // Payments subcollection
+      match /payments/{paymentId} {
+        allow read, write: if belongsToBusiness(businessId);
+      }
+
+      // Expenses subcollection
+      match /expenses/{expenseId} {
+        allow read: if belongsToBusiness(businessId);
+        allow write: if isAdmin(businessId) || (isApproved(businessId) && getUserData(businessId).permissionsCsv.matches('.*MANAGE_EXPENSES.*'));
+      }
+
+      // Stock Transactions
+      match /stockTransactions/{transactionId} {
+        allow read: if belongsToBusiness(businessId);
+        allow create: if belongsToBusiness(businessId);
+        allow update, delete: if isAdmin(businessId);
+      }
+
+      // Audit Logs
+      match /auditLogs/{logId} {
+        allow read: if isAdmin(businessId);
+        allow create: if isAuthenticated();
+        allow update, delete: if false; // Immutable audit log
+      }
+    }
+  }
+}

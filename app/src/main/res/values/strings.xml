@@ -1,0 +1,54 @@
+<resources>
+    <string name="app_name">আমার দোকান</string>
+    <string name="english_app_name">Amar Dokan</string>
+    
+    <!-- Navigation -->
+    <string name="nav_home">হোম</string>
+    <string name="nav_stock">স্টক</string>
+    <string name="nav_sales">বিক্রি</string>
+    <string name="nav_customers">কাস্টমার</string>
+    <string name="nav_reports">রিপোর্ট</string>
+    
+    <!-- Quick Actions -->
+    <string name="action_add_product">পণ্য যোগ করুন</string>
+    <string name="action_stock_in">স্টক ইন</string>
+    <string name="action_stock_out">স্টক আউট</string>
+    <string name="action_make_sale">বিক্রি করুন</string>
+    <string name="action_receive_payment">পেমেন্ট নিন</string>
+    <string name="action_add_expense">খরচ যোগ করুন</string>
+    <string name="action_due">দেনা-পাওনা</string>
+    
+    <!-- Common Actions -->
+    <string name="save">সেভ করুন</string>
+    <string name="cancel">বাতিল</string>
+    <string name="delete">মুছে ফেলুন</string>
+    <string name="edit">সম্পাদনা</string>
+    <string name="approve">অনুমোদন করুন</string>
+    <string name="reject">বাতিল করুন</string>
+    <string name="block">ব্লক করুন</string>
+    <string name="login">লগইন</string>
+    <string name="logout">লগআউট</string>
+    <string name="search">অনুসন্ধান করুন…</string>
+    <string name="filter">ফিল্টার</string>
+    
+    <!-- Dashboard Stats -->
+    <string name="total_sales">মোট বিক্রি</string>
+    <string name="today_sales">আজকের বিক্রি</string>
+    <string name="total_due">মোট বকেয়া</string>
+    <string name="today_received">আজকের আদায়</string>
+    <string name="total_products">মোট পণ্য</string>
+    <string name="low_stock">কম স্টক</string>
+    <string name="total_customers">মোট কাস্টমার</string>
+    <string name="today_expense">আজকের খরচ</string>
+    <string name="estimated_profit">মোট লাভ</string>
+    
+    <!-- Settings & Misc -->
+    <string name="settings">সেটিংস</string>
+    <string name="users">ব্যবহারকারী</string>
+    <string name="business">ব্যবসা</string>
+    <string name="branch">শাখা</string>
+    <string name="ai_assistant">দোকান AI</string>
+    <string name="backup_restore">ব্যাকআপ ও রিস্টোর</string>
+    <string name="audit_logs">অডিট লগ</string>
+    <string name="currency_symbol">৳</string>
+</resources>
